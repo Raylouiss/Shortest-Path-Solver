@@ -1,8 +1,6 @@
 package Algorithm
 
-import(
-	"fmt"
-)
+import "fmt"
 
 func CopyMatrix(matrix [][]float64) [][]float64{
 	rows := len(matrix)
@@ -53,16 +51,17 @@ func checkStillHaveNode(adjMatrix [][]float64) bool {
 }
 
 func FindNextNode(currentNodeDirection []float64, rangeToGoal map[string]float64, distance *float64, nodeIndex map[string]int) int {
-	minIdx, fValue := 0, 0
+	minIdx, fValue := 0, 0.0
 	count := 0
-	tempDistance := 0
+	tempDistance := 0.0
 	for idx, value := range currentNodeDirection {
-		tempFValue := 0
+		tempFValue := 0.0
 		if(value != 0) {
 			gValue := *distance + value
-			nodeName, found := GetKeyByValue(nodeIdx, idx)
+			nodeName, found := GetKeyByValue(nodeIndex, idx)
+			hValue := 0.0
 			if(found){
-				hValue := rangeToGoal[nodeName]
+				hValue = rangeToGoal[nodeName]
 			}
 			tempFValue = gValue + hValue
 			if(count == 0){
@@ -78,7 +77,7 @@ func FindNextNode(currentNodeDirection []float64, rangeToGoal map[string]float64
 		}
 	}
 	*distance = tempDistance
-	return idx
+	return minIdx
 }
 
 func TurnOffNode(adjMatrix [][]float64, firstNode int, secondNode int){
@@ -91,20 +90,23 @@ func TurnOffNode(adjMatrix [][]float64, firstNode int, secondNode int){
 	}
 }
 
-func AStar(rangeToGoal map[string]float64, adjMatrix [][]float64, nodeIndex map[string]int, string goal, string start) []string{
+func AStar(rangeToGoal map[string]float64, adjMatrix [][]float64, nodeIndex map[string]int, goal string, start string) []string {
 	tempAdjMatrix := CopyMatrix(adjMatrix)
 	tempIdx := nodeIndex[start]
 	currentNode := start
-	distance := 0
+	distance := 0.0
 	path := []string{start}
-	while currentNode != goal && !checkStillHaveNode(tempAdjMatrix) {
+	fmt.Println("Im here")
+	for currentNode != goal && checkStillHaveNode(tempAdjMatrix) {
+		fmt.Println("This is current node :", currentNode)
 		currentNodeDirection := adjMatrix[tempIdx]
 		nextIdx := FindNextNode(currentNodeDirection, rangeToGoal, &distance, nodeIndex)
 		TurnOffNode(tempAdjMatrix, tempIdx, nextIdx)
-		nodeName := getKeyByValue(nodeIdx, nextIdx)
+		nodeName, _ := GetKeyByValue(nodeIndex, nextIdx)
 		path = append(path, nodeName)
 		currentNode = nodeName
 		tempIdx = nextIdx
-	} 
+		fmt.Println("DONE")
+	}
 	return path
 }
