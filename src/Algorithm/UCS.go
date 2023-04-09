@@ -1,8 +1,6 @@
 package Algorithm
 
 import (
-	"fmt"
-
 	"Tucil3_13521054_13521143/src/Class"
 )
 
@@ -49,7 +47,6 @@ func AddFrontier(frontier map[string]float64, distance float64, key string) map[
 		newFrontier[k] = v
 	}
 	newFrontier[key] = distance
-	// fmt.Println(newFrontier)
 	return newFrontier
 }
 
@@ -123,9 +120,6 @@ func UCS(start string, goal string, adjMatrix [][]float64, graph *Class.Graph) (
 	for !IsGoal(currentNode, goal) && !IsEmpty(frontier) && !IsVisited(visited, currentNode) {
 		visited = AddVisited(currentNode, visited)
 		nodeChild := SearchChild(currentNode, graph, visited)
-		fmt.Println(visited)
-		fmt.Println(nodeChild)
-		// path = append(path, currentNode)
 
 		for i := 0; i < graph.TotalNodes; i++ {
 			destination := graph.Nodes[i].Name
@@ -139,15 +133,8 @@ func UCS(start string, goal string, adjMatrix [][]float64, graph *Class.Graph) (
 				}
 			}
 		}
-		// fmt.Println(path)
-		// fmt.Println(visited)
-		// fmt.Println(nodeChild)
-		fmt.Println(frontier)
 		delete(frontier, currentNode)
-		// fmt.Println(frontier)
-		fmt.Println(frontier)
 		currentNode = GetSmallest(frontier, graph)
-		fmt.Println("----------")
 	}
 	totalWeight := weight[currentNode]
 	path = CreatePath(parent, currentNode)

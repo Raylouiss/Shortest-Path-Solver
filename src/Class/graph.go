@@ -105,8 +105,31 @@ func PrintAllWeight(graph *Graph) {
 	}
 }
 
-func PrintAdjacencyNodes(graph [][]float64) {
-	for _, tempGraph := range graph {
-		fmt.Println(tempGraph)
+func PrintAdjacencyNodes(adjacencyMatrix [][]float64) {
+	for _, tempMatrix := range adjacencyMatrix {
+		fmt.Println(tempMatrix)
 	}
+}
+
+func WeightedAdjacencyMatrix(adjacencyMatrix [][]float64, graph *Graph) [][]float64 {
+	rows := len(adjacencyMatrix)
+	cols := len(adjacencyMatrix[0])
+
+	result := make([][]float64, rows)
+	for i := 0; i < rows; i++ {
+		result[i] = make([]float64, cols)
+	}
+
+	for i := 0; i < rows; i++ {
+		for j := 0; j < cols; j++ {
+			if graph.IsTetanggaFloat(graph.Nodes[i].Name, graph.Nodes[j].Name) > 0 {
+				distance := graph.GetDistance(graph.Nodes[i].Name, graph.Nodes[j].Name)
+				result[i][j] = adjacencyMatrix[i][j] * distance
+			} else {
+				result[i][j] = 0
+			}
+		}
+	}
+
+	return result
 }

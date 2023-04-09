@@ -73,6 +73,9 @@ func main() {
 	fmt.Print("\n")
 	fmt.Println("Weight:")
 	Class.PrintAllWeight(&graph)
+	fmt.Print("\n")
+	fmt.Println("WeightedAdjacencyMatrix:")
+	Class.PrintAdjacencyNodes(Class.WeightedAdjacencyMatrix(graph.AdjacencyMatrix, &graph))
 
 	// Get distance between two nodes
 	fmt.Println("\nDistance from A to C:", graph.IsTetanggaFloat("A", "C"))
