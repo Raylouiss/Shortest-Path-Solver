@@ -1,7 +1,5 @@
 package Algorithm
 
-import "fmt"
-
 func CopyMatrix(matrix [][]float64) [][]float64{
 	rows := len(matrix)
 	cols := len(matrix[0])
@@ -96,9 +94,7 @@ func AStar(rangeToGoal map[string]float64, adjMatrix [][]float64, nodeIndex map[
 	currentNode := start
 	distance := 0.0
 	path := []string{start}
-	fmt.Println("Im here")
 	for currentNode != goal && checkStillHaveNode(tempAdjMatrix) {
-		fmt.Println("This is current node :", currentNode)
 		currentNodeDirection := adjMatrix[tempIdx]
 		nextIdx := FindNextNode(currentNodeDirection, rangeToGoal, &distance, nodeIndex)
 		TurnOffNode(tempAdjMatrix, tempIdx, nextIdx)
@@ -106,7 +102,6 @@ func AStar(rangeToGoal map[string]float64, adjMatrix [][]float64, nodeIndex map[
 		path = append(path, nodeName)
 		currentNode = nodeName
 		tempIdx = nextIdx
-		fmt.Println("DONE")
 	}
 	return path
 }
