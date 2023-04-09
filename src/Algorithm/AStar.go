@@ -71,7 +71,7 @@ func TurnOffNode(adjMatrix [][]float64, firstNode int, secondNode int){
 	}
 }
 
-func AStar(rangeToGoal map[string]float64, adjMatrix [][]float64, nodeIndex map[string]int, goal string, start string) []string {
+func AStar(rangeToGoal map[string]float64, adjMatrix [][]float64, nodeIndex map[string]int, goal string, start string) ([]string, float64) {
 	tempAdjMatrix := CopyMatrix(adjMatrix)
 	tempIdx := nodeIndex[start]
 	currentNode := start
@@ -86,5 +86,5 @@ func AStar(rangeToGoal map[string]float64, adjMatrix [][]float64, nodeIndex map[
 		currentNode = nodeName
 		tempIdx = nextIdx
 	}
-	return path
+	return path, distance
 }
