@@ -20,23 +20,6 @@ func GetKeyByValue(myMap map[string]int, value int) (string, bool){
 	return "", false
 }
 
-// func GetAllNode(nodeIndex map[string]int) map[string]bool{
-// 	nodes := make(map[string]bool)
-// 	for key, val := range nodeIndex{
-// 		nodes[key] = false
-// 	}
-// 	return nodes
-// }
-
-// func CheckAllNodeStatus(nodeStatus map[string]bool) bool{
-// 	for key, val := range nodeStatus{
-// 		if(!val){
-// 			return false
-// 		}
-// 	}
-// 	return true
-// }
-
 func checkStillHaveNode(adjMatrix [][]float64) bool {
 	for i := 0; i<len(adjMatrix); i++{
 		for j := 0; j<len(adjMatrix[i]); j++ {
