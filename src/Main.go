@@ -7,27 +7,32 @@ import (
 
 func main(){
 	// include range to goal
-	rangeToGoal := make(map[string]float64)
-	rangeToGoal["one"] = 5
-	rangeToGoal["two"] = 2.236
-	rangeToGoal["three"] = 3
-	rangeToGoal["four"] = 2
-	rangeToGoal["five"] = 0
+	rangeToGoal := map[string]float64{
+		"A": 10,
+		"B": 8,
+		"C": 7,
+		"D": 3,
+		"E": 2,
+		"F": 0,
+	}
 	// include adj matrix
 	adjMatrix := [][]float64{
-		{0, 2.828, 4, 3.606, 0},
-		{2.828, 0, 0, 1, 2.236},
-		{4, 0, 0, 0, 3},
-		{3.606, 1, 0, 0, 2},
-		{0, 2.236, 3, 2, 0},
+		{0, 7, 0, 5, 0, 0},
+		{7, 0, 8, 9, 7, 0},
+		{0, 8, 0, 0, 5, 0},
+		{5, 9, 0, 0, 15, 6},
+		{0, 7, 5, 15, 0, 8},
+		{0, 0, 0, 6, 8, 0},
 	}
 	nodeIdx := make(map[string]int)
-	nodeIdx["one"] = 0
-	nodeIdx["two"] = 1
-	nodeIdx["three"] = 2
-	nodeIdx["four"] = 3
-	nodeIdx["five"] = 4
-	path := Algorithm.AStar(rangeToGoal, adjMatrix, nodeIdx, "five", "one")
+	nodeIdx["A"] = 0
+	nodeIdx["B"] = 1
+	nodeIdx["C"] = 2
+	nodeIdx["D"] = 3
+	nodeIdx["E"] = 4
+	nodeIdx["F"] = 5
+	path, distance := Algorithm.AStar(rangeToGoal, adjMatrix, nodeIdx, "F", "A")
+	fmt.Println("Cost :", distance)
 	fmt.Println("This is the path:")
 	for i:=0; i<len(path); i++{
 		fmt.Print(path[i], " ")
