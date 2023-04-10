@@ -86,5 +86,5 @@ func main() {
 	fmt.Println("Index of node C:", graph.GetIndex("C"))
 
 	fmt.Println(graph.GetDistance("A", "C"))
-	fmt.Println(Algorithm.UCS("B", "G", graph.AdjacencyMatrix, &graph))
+	fmt.Println(Algorithm.UCS("D", "G", graph.AdjacencyMatrix, &graph))
 }

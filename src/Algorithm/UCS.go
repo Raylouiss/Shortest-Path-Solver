@@ -2,13 +2,14 @@ package Algorithm
 
 import (
 	"Tucil3_13521054_13521143/src/Class"
+	"fmt"
 )
 
-func SearchChild(strings string, graph *Class.Graph, visited map[string]bool) []Class.Node {
+func SearchChild(strings string, graph *Class.Graph, visited map[string]bool, frontier map[string]float64) []Class.Node {
 	index := graph.GetIndex(strings)
 	result := []Class.Node{}
 	for i := 0; i < graph.TotalNodes; i++ {
-		if !IsVisited(visited, graph.Nodes[i].Name) {
+		if !IsVisited(visited, graph.Nodes[i].Name) && !IsFrontier(frontier, graph.Nodes[i].Name) {
 			if graph.AdjacencyMatrix[index][i] > 0 {
 				result = append(result, graph.Nodes[i])
 			}
@@ -60,8 +61,13 @@ func AddVisited(currentNode string, visited map[string]bool) map[string]bool {
 	return newVisited
 }
 
-func IsVisited(visited map[string]bool, string string) bool {
-	_, ok := visited[string]
+func IsVisited(visited map[string]bool, strings string) bool {
+	_, ok := visited[strings]
+	return ok
+}
+
+func IsFrontier(frontier map[string]float64, strings string) bool {
+	_, ok := frontier[strings]
 	return ok
 }
 
@@ -119,7 +125,8 @@ func UCS(start string, goal string, adjMatrix [][]float64, graph *Class.Graph) (
 
 	for !IsGoal(currentNode, goal) && !IsEmpty(frontier) && !IsVisited(visited, currentNode) {
 		visited = AddVisited(currentNode, visited)
-		nodeChild := SearchChild(currentNode, graph, visited)
+		nodeChild := SearchChild(currentNode, graph, visited, frontier)
+		fmt.Println(nodeChild)
 
 		for i := 0; i < graph.TotalNodes; i++ {
 			destination := graph.Nodes[i].Name
@@ -133,7 +140,12 @@ func UCS(start string, goal string, adjMatrix [][]float64, graph *Class.Graph) (
 				}
 			}
 		}
+		// fmt.Println(nodeChild)
+		fmt.Println(visited)
+		fmt.Println(frontier)
 		delete(frontier, currentNode)
+		fmt.Println(frontier)
+		fmt.Println("----------")
 		currentNode = GetSmallest(frontier, graph)
 	}
 	totalWeight := weight[currentNode]
