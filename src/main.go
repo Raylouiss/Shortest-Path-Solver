@@ -86,5 +86,46 @@ func main() {
 	fmt.Println("Index of node C:", graph.GetIndex("C"))
 
 	fmt.Println(graph.GetDistance("A", "C"))
-	fmt.Println(Algorithm.UCS("D", "G", graph.AdjacencyMatrix, &graph))
+	fmt.Println(Algorithm.UCS("A", "F", graph.AdjacencyMatrix, &graph))
+
+	rangeToGoal := map[string]float64{
+		"A": graph.GetDistanceToGoal("A", "F"),
+		"B": graph.GetDistanceToGoal("B", "F"),
+		"C": graph.GetDistanceToGoal("C", "F"),
+		"D": graph.GetDistanceToGoal("D", "F"),
+		"E": graph.GetDistanceToGoal("E", "F"),
+		"F": graph.GetDistanceToGoal("F", "F"),
+		"G": graph.GetDistanceToGoal("G", "F"),
+		"H": graph.GetDistanceToGoal("H", "F"),
+	}
+	// include adj matrix
+	nodeIdx := make(map[string]int)
+	for i := 0; i < graph.TotalNodes; i++ {
+		nodeIdx[graph.Nodes[i].Name] = graph.GetIndex(graph.Nodes[i].Name)
+	}
+	// fmt.Println(nodeIdx)
+	// adjMatrix := [][]float64{
+	// 	{0, 7, 0, 5, 0, 0},
+	// 	{7, 0, 8, 9, 7, 0},
+	// 	{0, 8, 0, 0, 5, 0},
+	// 	{5, 9, 0, 0, 15, 6},
+	// 	{0, 7, 5, 15, 0, 8},
+	// 	{0, 0, 0, 6, 8, 0},
+	// }
+	// fmt.Println(graph.AdjacencyMatrix)
+	// fmt.Println(adjMatrix)
+	adjMatrix2 := Class.WeightedAdjacencyMatrix(graph.AdjacencyMatrix, &graph)
+	// fmt.Println(adjMatrix2)
+	// nodeIdx["A"] = 0
+	// nodeIdx["B"] = 1
+	// nodeIdx["C"] = 2
+	// nodeIdx["D"] = 3
+	// nodeIdx["E"] = 4
+	// nodeIdx["F"] = 5
+	path, distance := Algorithm.AStar(rangeToGoal, adjMatrix2, nodeIdx, "F", "A")
+	fmt.Println("Cost :", distance)
+	fmt.Println("This is the path:")
+	for i := 0; i < len(path); i++ {
+		fmt.Print(path[i], " ")
+	}
 }

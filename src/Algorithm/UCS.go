@@ -2,7 +2,6 @@ package Algorithm
 
 import (
 	"Tucil3_13521054_13521143/src/Class"
-	"fmt"
 )
 
 func SearchChild(strings string, graph *Class.Graph, visited map[string]bool, frontier map[string]float64) []Class.Node {
@@ -126,7 +125,7 @@ func UCS(start string, goal string, adjMatrix [][]float64, graph *Class.Graph) (
 	for !IsGoal(currentNode, goal) && !IsEmpty(frontier) && !IsVisited(visited, currentNode) {
 		visited = AddVisited(currentNode, visited)
 		nodeChild := SearchChild(currentNode, graph, visited, frontier)
-		fmt.Println(nodeChild)
+		// fmt.Println(nodeChild)
 
 		for i := 0; i < graph.TotalNodes; i++ {
 			destination := graph.Nodes[i].Name
@@ -141,11 +140,11 @@ func UCS(start string, goal string, adjMatrix [][]float64, graph *Class.Graph) (
 			}
 		}
 		// fmt.Println(nodeChild)
-		fmt.Println(visited)
-		fmt.Println(frontier)
+		// fmt.Println(visited)
+		// fmt.Println(frontier)
 		delete(frontier, currentNode)
-		fmt.Println(frontier)
-		fmt.Println("----------")
+		// fmt.Println(frontier)
+		// fmt.Println("----------")
 		currentNode = GetSmallest(frontier, graph)
 	}
 	totalWeight := weight[currentNode]

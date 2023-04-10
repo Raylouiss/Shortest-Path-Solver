@@ -73,6 +73,18 @@ func (graph *Graph) GetDistance(from string, destination string) float64 {
 
 }
 
+func (graph *Graph) GetDistanceToGoal(from string, destination string) float64 {
+	distance := -1.0
+	index1 := graph.GetIndex(from)
+	index2 := graph.GetIndex(destination)
+	x := graph.Nodes[index2].Latitude - graph.Nodes[index1].Latitude
+	y := graph.Nodes[index2].Longtitude - graph.Nodes[index1].Longtitude
+
+	distance = math.Sqrt(x*x + y*y)
+	return distance
+
+}
+
 func (graph *Graph) GetIndex(nodeSearched string) int {
 	for i := 0; i < len(graph.Nodes); i++ {
 		if graph.Nodes[i].Name == nodeSearched {
