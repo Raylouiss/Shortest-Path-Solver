@@ -46,22 +46,39 @@
 // w.ShowAndRun()
 package GUI
 
-import (
-	// "fyne.io/fyne/v2"
-	"image/color"
+// import (
+// 	"fmt"
+// 	"os/exec"
+// )
 
+// func ShowGUI() {
+// 	cmd := exec.Command("python3", "-m", "tkintergo")
+// 	err := cmd.Run()
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+// }
+
+import (
+	"fyne.io/fyne/v2"
+	"image/color"
+	"fyne.io/x/fyne/layout"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
+	// "fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	// "fyne.io/fyne/v2/desktop"
 )
 
 func ShowGUI() {
 	myApp := app.New()
 	myWindow := myApp.NewWindow("Graph Example")
+	myWindow.SetFixedSize(true)
+	myWindow.Resize(fyne.NewSize(1000, 500))
 
-	graph := widget.NewLabel("Graph widget placeholder") // Replace with a third-party plotting library
+	image := canvas.NewImageFromFile("https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=12&size=400x400&key=YOUR_API_KEY")
+	image.FillMode = canvas.ImageFillOriginal
 
 	// button1 := widget.NewButton("Button 1", func() {
 	// 	// Handle button 1 click event
@@ -90,7 +107,7 @@ func ShowGUI() {
 
 	buttonsFix := container.New(layout.NewVBoxLayout(), buttons, searchButton)
 
-	content := container.New(layout.NewHBoxLayout(), buttonsFix, graph)
+	content := container.New(layout.NewHBoxLayout(), buttonsFix, image)
 
 	resultPath := canvas.NewText("Path : ", color.White)
 
@@ -100,6 +117,10 @@ func ShowGUI() {
 
 	display := container.New(layout.NewVBoxLayout(), content, result)
 
+
+
 	myWindow.SetContent(display)
+	myWindow.CenterOnScreen()
+
 	myWindow.ShowAndRun()
 }

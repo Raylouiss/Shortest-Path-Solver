@@ -2,7 +2,10 @@ module TUCIL3_13521054_13521143
 
 go 1.20
 
-require fyne.io/fyne/v2 v2.3.3
+require (
+	fyne.io/fyne/v2 v2.3.3
+	fyne.io/x/fyne v0.0.0-20230128220048-43a1c4cd1ed8
+)
 
 require (
 	fyne.io/systray v1.10.1-0.20230312215936-7f71b037e260 // indirect
