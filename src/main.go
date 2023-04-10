@@ -13,7 +13,7 @@ import (
 
 func main() {
 	// Read input from file
-	filepath := "test/test.txt"
+	filepath := "../test/test.txt"
 	file, err := os.Open(filepath)
 	if err != nil {
 		log.Fatal(err)
@@ -122,10 +122,14 @@ func main() {
 	// nodeIdx["D"] = 3
 	// nodeIdx["E"] = 4
 	// nodeIdx["F"] = 5
-	path, distance := Algorithm.AStar(rangeToGoal, adjMatrix2, nodeIdx, "F", "A")
-	fmt.Println("Cost :", distance)
-	fmt.Println("This is the path:")
-	for i := 0; i < len(path); i++ {
-		fmt.Print(path[i], " ")
+	path, distance, found := Algorithm.AStar(rangeToGoal, adjMatrix2, nodeIdx, "F", "A")
+	if(found){
+		fmt.Println("Cost :", distance)
+		fmt.Println("This is the path:")
+		for i := 0; i < len(path); i++ {
+			fmt.Print(path[i], " ")
+		}
+	}else{
+		fmt.Println("STUCK")
 	}
 }
