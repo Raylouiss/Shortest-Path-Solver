@@ -6,7 +6,7 @@ func CopyMatrix(matrix [][]float64) [][]float64 {
 	matrixCopy := make([][]float64, rows)
 	for i := range matrixCopy {
 		matrixCopy[i] = make([]float64, cols)
-		matrixCopy[i] = append(matrixCopy[i], matrix[i]...)
+		copy(matrixCopy[i], matrix[i])
 	}
 	return matrixCopy
 }
@@ -32,7 +32,7 @@ func checkStillHaveNode(adjMatrix [][]float64) bool {
 }
 
 func FindNextNode(currentNodeDirection []float64, rangeToGoal map[string]float64, distance *float64, nodeIndex map[string]int) int {
-	minIdx, fValue := 0, 0.0
+	minIdx, fValue := -1, 0.0
 	count := 0
 	tempDistance := 0.0
 	for idx, value := range currentNodeDirection {
@@ -71,7 +71,7 @@ func TurnOffNode(adjMatrix [][]float64, firstNode int, secondNode int) {
 	}
 }
 
-func AStar(rangeToGoal map[string]float64, adjMatrix [][]float64, nodeIndex map[string]int, goal string, start string) ([]string, float64) {
+func AStar(rangeToGoal map[string]float64, adjMatrix [][]float64, nodeIndex map[string]int, goal string, start string) ([]string, float64, bool) {
 	tempAdjMatrix := CopyMatrix(adjMatrix)
 	// fmt.Println("sampe 1")
 	// fmt.Println(tempAdjMatrix)
@@ -80,9 +80,13 @@ func AStar(rangeToGoal map[string]float64, adjMatrix [][]float64, nodeIndex map[
 	distance := 0.0
 	path := []string{start}
 	// fmt.Println("sampe 2")
+	nextIdx := -1
 	for currentNode != goal && checkStillHaveNode(tempAdjMatrix) {
-		currentNodeDirection := adjMatrix[tempIdx]
+		currentNodeDirection := tempAdjMatrix[tempIdx]
 		nextIdx := FindNextNode(currentNodeDirection, rangeToGoal, &distance, nodeIndex)
+		if(nextIdx == -1){
+			break
+		}
 		TurnOffNode(tempAdjMatrix, tempIdx, nextIdx)
 		nodeName, _ := GetKeyByValue(nodeIndex, nextIdx)
 		path = append(path, nodeName)
@@ -90,5 +94,9 @@ func AStar(rangeToGoal map[string]float64, adjMatrix [][]float64, nodeIndex map[
 		// fmt.Println(nextIdx)
 		tempIdx = nextIdx
 	}
-	return path, distance
+	if(nextIdx == -1){
+		return path, distance, false
+	}else{
+		return path, distance, true
+	}
 }
