@@ -97,20 +97,31 @@ class Application(Frame):
         for markerKey in self.my_dic:
             latitude, longitude = self.my_dic[markerKey]
             name = markerKey
-            self.map_widget.set_marker(latitude, longitude, name)
+            self.map_widget.set_marker(float(latitude), float(longitude), name)
+        
 
     def read_file(self):
         self.my_dic = {}
         self.adjMatrix = []
+        count = 0
         with open(self.selected_file_name, 'r') as file:
             content = file.readlines()
             n = int(content[0])
             for line in content[1:n+1]:
                 parts = line.split()
                 self.my_dic[parts[0]] = (parts[1], parts[2])
+            # Find node with most neighbors and set as center node
+            max_neighbors = -1
+            for node in self.my_dic:
+                neighbors = sum(1 for adj in content[n+1:] if adj.startswith(node))
+                if neighbors > max_neighbors:
+                    self.key_center = node
+                    max_neighbors = neighbors
             for adj in content[n+1:]:
-                splitAdjData = adj.strip().split("\t")
+                splitAdjData = adj.strip().split()
                 self.adjMatrix.append(splitAdjData)
+        latitude, longitude = self.my_dic[self.key_center]
+        self.map_widget.set_position(float(latitude), float(longitude), self.key_center)
 
         # print(self.my_dic)
         # print(self.adjMatrix)  
