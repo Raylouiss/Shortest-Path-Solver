@@ -56,16 +56,35 @@ func (graph *Graph) IsTetanggaFloat(from string, destination string) float64 {
 	return graph.AdjacencyMatrix[index1][index2]
 }
 
+func degToRad(deg float64) float64 {
+	return deg * (math.Pi / 180)
+}
+
 func (graph *Graph) GetDistance(from string, destination string) float64 {
 	isTetangga := graph.IsTetanggaFloat(from, destination)
 	distance := -1.0
+	earthRadius := 6371.0
 	if isTetangga == 1 {
 		index1 := graph.GetIndex(from)
 		index2 := graph.GetIndex(destination)
-		x := graph.Nodes[index2].Latitude - graph.Nodes[index1].Latitude
-		y := graph.Nodes[index2].Longtitude - graph.Nodes[index1].Longtitude
 
-		distance = math.Sqrt(x*x + y*y)
+		lat1Rad := degToRad(graph.Nodes[index1].Latitude)
+		lat2Rad := degToRad(graph.Nodes[index2].Latitude)
+		lon1Rad := degToRad(graph.Nodes[index1].Longtitude)
+		lon2Rad := degToRad(graph.Nodes[index2].Longtitude)
+
+		deltaLat := lat2Rad - lat1Rad
+		deltaLon := lon2Rad - lon1Rad
+
+		a := math.Sin(deltaLat/2)*math.Sin(deltaLat/2) +
+			math.Cos(lat1Rad)*math.Cos(lat2Rad)*
+				math.Sin(deltaLon/2)*math.Sin(deltaLon/2)
+
+		// Calculate the angular distance in radians
+		c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
+
+		// Calculate the distance in kilometers
+		distance := earthRadius * c
 		return distance
 	}
 	log.Print("Node tidak bertertangga")
@@ -75,12 +94,27 @@ func (graph *Graph) GetDistance(from string, destination string) float64 {
 
 func (graph *Graph) GetDistanceToGoal(from string, destination string) float64 {
 	distance := -1.0
+	earthRadius := 6371.0
+
 	index1 := graph.GetIndex(from)
 	index2 := graph.GetIndex(destination)
-	x := graph.Nodes[index2].Latitude - graph.Nodes[index1].Latitude
-	y := graph.Nodes[index2].Longtitude - graph.Nodes[index1].Longtitude
+	lat1Rad := degToRad(graph.Nodes[index1].Latitude)
+	lat2Rad := degToRad(graph.Nodes[index2].Latitude)
+	lon1Rad := degToRad(graph.Nodes[index1].Longtitude)
+	lon2Rad := degToRad(graph.Nodes[index2].Longtitude)
 
-	distance = math.Sqrt(x*x + y*y)
+	deltaLat := lat2Rad - lat1Rad
+	deltaLon := lon2Rad - lon1Rad
+
+	a := math.Sin(deltaLat/2)*math.Sin(deltaLat/2) +
+		math.Cos(lat1Rad)*math.Cos(lat2Rad)*
+			math.Sin(deltaLon/2)*math.Sin(deltaLon/2)
+
+	// Calculate the angular distance in radians
+	c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
+
+	// Calculate the distance in kilometers
+	distance = earthRadius * c
 	return distance
 
 }
