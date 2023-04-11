@@ -94,26 +94,26 @@ class Application(Frame):
         # for adj in self.file_data[n+1 :]:
         #     splitAdjData = adj.strip().split("\t")
         #     adjMatrix.append(splitAdjData)
-        # for markerKey in my_dict:
-        #     latitude, longitude = my_dict[markerKey]
-        #     name = markerKey
-        #     self.map_widget.set_marker(latitude, longitude, title = name)
+        for markerKey in self.my_dic:
+            latitude, longitude = self.my_dic[markerKey]
+            name = markerKey
+            self.map_widget.set_marker(latitude, longitude, name)
 
     def read_file(self):
         self.my_dic = {}
-        self.adjMatrix = {}
+        self.adjMatrix = []
         with open(self.selected_file_name, 'r') as file:
-            n = int(file.readline())
-            for line in file.readlines()[:n]:
+            content = file.readlines()
+            n = int(content[0])
+            for line in content[1:n+1]:
                 parts = line.split()
                 self.my_dic[parts[0]] = (parts[1], parts[2])
-            for adj in file.readlines()[n+1 :]:
+            for adj in content[n+1:]:
                 splitAdjData = adj.strip().split("\t")
                 self.adjMatrix.append(splitAdjData)
-            # self.adjMatrix = [line.strip().split('\t') for line in file.readlines()]
 
-        print(self.my_dic)
-        print(self.adjMatrix)
+        # print(self.my_dic)
+        # print(self.adjMatrix)  
                 
 
 
