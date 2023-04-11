@@ -3,6 +3,7 @@ import tkintermapview
 import socket
 from tkinter import filedialog
 import os
+import subprocess
 
 # root = Tk()
 
@@ -68,6 +69,15 @@ class Application(Frame):
         self.fileName = filedialog.askopenfilenames(initialdir= initialdir, title = "Select A File", filetypes=(("txt files", "*.txt"),("all files", "*.*")))
         self.my_file_label.config(text= self.fileName)
 
+    def reset_gui(self):
+        # Terminate the current GUI
+        self.master.destroy()
+        # Run the Go file in a new terminal window
+        subprocess.Popen(['gnome-terminal', '--', 'go', 'run', os.path.join(os.getcwd(), "main.go")])
+        
+        # Restart the GUI
+        self.__init__()
+
     def create_widgets(self):
         # Create container
         # self.container = Frame(self, bg='gray', width=800, height=400)
@@ -82,7 +92,7 @@ class Application(Frame):
         self.choose_file_btn = Button(self.file_container)
         self.choose_file_btn["text"] = "Upload File"
         self.choose_file_btn["command"] = self.choose_file_name
-        self.choose_file_btn["font"] = ("Arial", 12)
+        self.choose_file_btn["font"] = ("Courier New", 12)
         self.choose_file_btn["bg"] = 'gray'
         self.choose_file_btn.pack(pady=(10, 30))
 
@@ -98,12 +108,14 @@ class Application(Frame):
         self.entry_goal.grid(row=1, column=1, padx=10, pady=(10, 30))
 
         # Choosing Algorithm Part
-        self.algorithm_container = Frame(self.left_container, width=300, height=150)
+        self.algorithm_container = Frame(self.left_container, width=300, height=150, bg= 'black')
+
         # Create radio buttons
         self.radio_var = StringVar()
-        self.radio_var.set("Option 1")
-        self.radio_button_1 = Radiobutton(self.algorithm_container, text="A* Algorithm", variable=self.radio_var, value="Option 1")
-        self.radio_button_2 = Radiobutton(self.algorithm_container, text="UCS Algorithm", variable=self.radio_var, value="Option 2")
+        self.radio_var.set(None)
+
+        self.radio_button_1 = Radiobutton(self.algorithm_container, text="A* Algorithm", variable=self.radio_var, value="Option 1", fg= "white", bg= 'black', font=("Courier New", 12), selectcolor="gray")
+        self.radio_button_2 = Radiobutton(self.algorithm_container, text="UCS Algorithm", variable=self.radio_var, value="Option 2", fg= "white", bg= 'black', font=("Courier New", 12), selectcolor="gray")
 
         # Place radio buttons in the frame
         self.radio_button_1.pack()
@@ -115,12 +127,20 @@ class Application(Frame):
         self.algorithm_container.pack(side="top", padx=10, pady=10)
 
         # Button container
-        self.button_container = Frame(self.left_container, width=300, height=150)
+        self.button_container = Frame(self.left_container, width=300, height=150, bg= "black")
         self.submit_button = Button(self.button_container)
         self.submit_button["text"] = "Search"
+        self.submit_button["bg"] = "gray"
+        self.submit_button["font"] = ("Courier New", 11)
         self.submit_button["command"] = self.send_input_to_go_algorithm
-        self.submit_button.pack()
-        self.button_container.pack(padx=10, pady=10)
+        self.submit_button.pack(side= "left", padx=(0, 20))
+        self.reset_button = Button(self.button_container)
+        self.reset_button["text"] = "Reset"
+        self.reset_button["command"] = self.reset_gui
+        self.reset_button["bg"] = "gray"
+        self.reset_button["font"] = ("Courier New", 11)
+        self.reset_button.pack(side = "left", padx=(20, 0))
+        self.button_container.pack(padx=10, pady=(20, 10))
 
         self.left_container.pack(side="left", fill=BOTH)
 
