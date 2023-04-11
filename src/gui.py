@@ -52,7 +52,7 @@ class Application(Frame):
         self.create_widgets()
 
     def send_input_to_go_algorithm(self):
-        input_str = self.my_file_label.cget('text')
+        input_str = self.selected_file_name + "@" + self.radio_var.get() + "@" + self.entry_start.get() + "@" + self.entry_goal.get()
         # Connect to Go Algorithm
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect(('localhost', 8080))
@@ -60,23 +60,64 @@ class Application(Frame):
 
         # Receive result from Go Algorithm
         result = s.recv(1024).decode()
-
-        self.result_label.config(text=result)
+        result_list = result.split(" ")
+        n_result_list= len(result_list)
+        result_path = ' '.join(result_list[:n_result_list-1])
+        result_cost = result_list[n_result_list-1]
+        self.label_result_container_path.config(text="Path:" + result_path)
+        self.label_result_container_cost.config(text="Cost:" + result_cost)
+        #create path disini
+        # self.result_label.config(text=result)
     
     def choose_file_name(self):
-        tucil3_folder = os.path.abspath(os.path.join(os.getcwd(), ".."))
-        initialdir = os.path.join(tucil3_folder, "test")
-        self.fileName = filedialog.askopenfilenames(initialdir= initialdir, title = "Select A File", filetypes=(("txt files", "*.txt"),("all files", "*.*")))
-        self.my_file_label.config(text= self.fileName)
+        # initialdir = os.path.abspath(os.path.join(os.getcwd(), "..", "main.go"))
+        # self.fileName = filedialog.askopenfilenames(initialdir= initialdir, title = "Select A File", filetypes=(("txt files", "*.txt"),("all files", "*.*")))
+        # return self.fileName
+        subprocess.Popen(['go', 'run', 'main.go']) # Run the Go file
+        self.selected_file_name = filedialog.askopenfilename(initialdir="./test", title="Select A File", filetypes=(("txt files", "*.txt"),("all files", "*.*")))
+        # self.my_file_label.config(text=self.selected_file_name)
+        # return self.selected_file_name
+        self.read_file()
+        #create mark disini
+        # print(self.file_data)
+        # n = self.file_data[0]
+        # n = int(n)
+        # print(n)
+        # my_dict = {}
+        # print(self.file_data[1])
+        # for coordinate in self.file_data[1:n+1]:
+        #     print(coordinate)
+        #     splitData = coordinate.strip().split(" ")
+        #     print(len(splitData))
+        #     my_dict[splitData[0]] = (splitData[1], splitData[2])
+        # adjMatrix = {}
+        # for adj in self.file_data[n+1 :]:
+        #     splitAdjData = adj.strip().split("\t")
+        #     adjMatrix.append(splitAdjData)
+        # for markerKey in my_dict:
+        #     latitude, longitude = my_dict[markerKey]
+        #     name = markerKey
+        #     self.map_widget.set_marker(latitude, longitude, title = name)
 
-    def reset_gui(self):
-        # Terminate the current GUI
-        self.master.destroy()
-        # Run the Go file in a new terminal window
-        subprocess.Popen(['gnome-terminal', '--', 'go', 'run', os.path.join(os.getcwd(), "main.go")])
-        
-        # Restart the GUI
-        self.__init__()
+    def read_file(self):
+        self.my_dic = {}
+        self.adjMatrix = {}
+        with open(self.selected_file_name, 'r') as file:
+            n = int(file.readline())
+            for line in file.readlines()[:n]:
+                parts = line.split()
+                self.my_dic[parts[0]] = (parts[1], parts[2])
+            for adj in file.readlines()[n+1 :]:
+                splitAdjData = adj.strip().split("\t")
+                self.adjMatrix.append(splitAdjData)
+            # self.adjMatrix = [line.strip().split('\t') for line in file.readlines()]
+
+        print(self.my_dic)
+        print(self.adjMatrix)
+                
+
+
+    # def mark_location(self):
 
     def create_widgets(self):
         # Create container
@@ -114,7 +155,7 @@ class Application(Frame):
         self.radio_var = StringVar()
         self.radio_var.set(None)
 
-        self.radio_button_1 = Radiobutton(self.algorithm_container, text="A* Algorithm", variable=self.radio_var, value="Option 1", fg= "white", bg= 'black', font=("Courier New", 12), selectcolor="gray")
+        self.radio_button_1 = Radiobutton(self.algorithm_container, text=" A* Algorithm", variable=self.radio_var, value="Option 1", fg= "white", bg= 'black', font=("Courier New", 12), selectcolor="gray")
         self.radio_button_2 = Radiobutton(self.algorithm_container, text="UCS Algorithm", variable=self.radio_var, value="Option 2", fg= "white", bg= 'black', font=("Courier New", 12), selectcolor="gray")
 
         # Place radio buttons in the frame
@@ -133,13 +174,7 @@ class Application(Frame):
         self.submit_button["bg"] = "gray"
         self.submit_button["font"] = ("Courier New", 11)
         self.submit_button["command"] = self.send_input_to_go_algorithm
-        self.submit_button.pack(side= "left", padx=(0, 20))
-        self.reset_button = Button(self.button_container)
-        self.reset_button["text"] = "Reset"
-        self.reset_button["command"] = self.reset_gui
-        self.reset_button["bg"] = "gray"
-        self.reset_button["font"] = ("Courier New", 11)
-        self.reset_button.pack(side = "left", padx=(20, 0))
+        self.submit_button.pack()
         self.button_container.pack(padx=10, pady=(20, 10))
 
         self.left_container.pack(side="left", fill=BOTH)
@@ -150,6 +185,9 @@ class Application(Frame):
         # Map Container
         self.map_container = Frame(self.right_container, width= 850, height= 600)
         self.map_widget = tkintermapview.TkinterMapView(self.map_container, width = 850, height = 600, corner_radius=0)
+        # self.map_widget.set_address("ITB", marker=True)
+        # self.map_widget.set_address("Kebun Binatang Bandung", marker=True)
+        # self.map_widget.create_line("ITB", "Kebun Binatang Bandung", color="red", width=2)
         self.map_widget.pack()
         self.map_container.pack(side="top")
 
@@ -161,6 +199,9 @@ class Application(Frame):
         self.label_result_container_cost.pack()
         self.result_container.pack()
         self.right_container.pack(side="right", fill=BOTH)
+
+        # self.result_label = Label(self.result_container, text="hasil_path", anchor="nw", justify="left", fg= "white", bg= 'gray', font=("Courier New", 12), width= 850)
+        # self.result_label.pack()
 
 
         # self.label.place(relx=0.5, rely=0.5, anchor="center")
