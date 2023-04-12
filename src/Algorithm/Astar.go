@@ -125,129 +125,67 @@ func TurnOffNode(adjMatrix [][]float64, firstNode int, secondNode int) {
 }
 
 func AStar(rangeToGoal map[string]float64, adjMatrix [][]float64, nodeIndex map[string]int, goal string, start string) ([]string, float64) {
-	// Init priority queue
 	pq := make(PriorityQueue, 1)
 
-	// copy matrix
 	tempAdjMatrix := CopyMatrix(adjMatrix)
 
-	// initialize distance
 	distance := 0.0
+
+	fValue := distance + rangeToGoal[start]
 
 	path := []string{start}
 
-	// result := []string{};
+	// visited := make(map[string]bool)
+	// visited[start] = true
 
-	// get first variable f(n)
-	fValue := distance + rangeToGoal[start]
-	// initialize first variable
-	// first variable item
 	itemValue := []interface{}{
-		path,
-		start,
-		distance,
+	path,
+	start,
+	distance,
 	}
-	// pushing first value to priority queue
 	pq[0] = &Item{
-		value:    itemValue,
-		priority: fValue,
-		index:    0,
+	value:    itemValue,
+	priority: fValue,
+	index:    0,
 	}
 	heap.Init(&pq)
 
-	// count := 0
-
 	for pq.Len() > 0 {
-		currentNode := heap.Pop(&pq).(*Item)
-		currentValue := currentNode.value.([]interface{})
-		nodeName := currentValue[1].(string)
-		currentIdx := nodeIndex[nodeName]
-		currentPath := currentValue[0].([]string)
-		distanceCost := currentValue[2].(float64)
-		tempDistanceCost := distanceCost
-		tempCurrentPath := currentPath
-		fmt.Println("This is the path now", currentPath)
-		currentNodeDirection := tempAdjMatrix[currentIdx]
-		if nodeName == goal {
-			path = currentPath
-			distance = distanceCost
-			break
-		}
-		for idx, val := range currentNodeDirection {
-			if val != 0 {
-				// fmt.Println("This is the queue")
-
-				// // Iterate over the elements in the copy and print their values.
-				// for pq.Len() > 0 {
-				// 	item_print := heap.Pop(&pq).(*Item)
-				// 	fmt.Println(item_print.value, item_print.priority)
-				// 	heap.Push(&pq, item_print)
-				// }
-				// fmt.Println("This is the index: ", idx)
-				nextNode, found := GetKeyByValue(nodeIndex, idx)
-				if found {
-					tempCurrentPath = append(currentPath, nextNode)
-				}
-				tempDistanceCost += val
-				fValue = tempDistanceCost + rangeToGoal[nextNode]
-				tempItemValue := []interface{}{
-					tempCurrentPath,
-					nextNode,
-					tempDistanceCost,
-				}
-				tempItem := &Item{
-					value:    tempItemValue,
-					priority: fValue,
-				}
-				// fmt.Println(tempItem.value, tempItem.priority)
-				heap.Push(&pq, tempItem)
-				// pq.update(item, item.value, fValue)
-				tempCurrentPath = currentPath
-				tempDistanceCost = distanceCost
-				// fmt.Println("This is the f value :", fValue)
-				// copyPq := make(PriorityQueue, pq.Len())
-				// copy(copyPq, pq)
-				// fmt.Println("This is the queue : ")
-				// for copyPq.Len() > 0 {
-				// 	item_print := heap.Pop(&copyPq).(*Item)
-				// 	fmt.Println(item_print.value, item_print.priority)
-				// }
-				// fmt.Println("=======================================")
-
-			}
-		}
-		// fmt.Println("This is the queue: ", pq)
-		// // Iterate over the elements in the copy and print their values.
-
-		// if(count == 2){
-
-		// 	break
-		// }
-		// count++
+	currentNode := heap.Pop(&pq).(*Item)
+	currentValue := currentNode.value.([]interface{})
+	nodeName := currentValue[1].(string)
+	// visited[nodeName] = true
+	currentIdx := nodeIndex[nodeName]
+	currentPath := currentValue[0].([]string)
+	distanceCost := currentValue[2].(float64)
+	fmt.Println("This is the path now", currentPath)
+	if nodeName == goal {
+	path = currentPath
+	distance = distanceCost
+	break
 	}
+
+	for idx, val := range tempAdjMatrix[currentIdx] {
+	if val != 0 {
+		nextNode, _ := GetKeyByValue(nodeIndex, idx)
+		// if found && !visited[nextNode] {
+		tempCurrentPath := append([]string{}, currentPath...) // create a copy of currentPath
+		tempCurrentPath = append(tempCurrentPath, nextNode)
+		tempDistanceCost := distanceCost + val
+		tempFValue := tempDistanceCost + rangeToGoal[nextNode]
+		tempItemValue := []interface{}{
+		tempCurrentPath,
+		nextNode,
+		tempDistanceCost,
+		}
+		tempItem := &Item{
+		value:    tempItemValue,
+		priority: tempFValue,
+		}
+		heap.Push(&pq, tempItem)
+		}
+	}
+	}
+
 	return path, distance
-	// tempIdx := nodeIndex[start]
-	// currentNode := start
-	// distance := 0.0
-	// path := []string{start}
-	// // fmt.Println("sampe 2")
-	// nextIdx := -1
-	// for currentNode != goal {
-	// 	// currentNodeDirection := tempAdjMatrix[tempIdx]
-	// 	// nextIdx := FindNextNode(currentNodeDirection, rangeToGoal, &distance, nodeIndex)
-	// 	// if(nextIdx == -1){
-	// 	// 	break
-	// 	// }
-	// 	// TurnOffNode(tempAdjMatrix, tempIdx, nextIdx)
-	// 	// nodeName, _ := GetKeyByValue(nodeIndex, nextIdx)
-	// 	// path = append(path, nodeName)
-	// 	// currentNode = nodeName
-	// 	// // fmt.Println(nextIdx)
-	// 	// tempIdx = nextIdx
-	// }
-	// if(nextIdx == -1){
-	// 	return path, distance, false
-	// }else{
-	// 	return path, distance, true
-	// }
 }
