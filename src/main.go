@@ -275,7 +275,7 @@ func read(filepath string, algo string, start string, goal string) ([]string, fl
 	// nodeIdx["D"] = 3
 	// nodeIdx["E"] = 4
 	// nodeIdx["F"] = 5
-	if algo != "option 2" {
+	if algo == "Option 2" {
 		path, distance := Algorithm.UCS(adjMatrix2, nodeIdx, goalString, startString)
 		fmt.Println("-----------------")
 		return path, distance
