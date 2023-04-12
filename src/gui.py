@@ -71,12 +71,10 @@ class Application(Frame):
         self.map_widget.delete_all_path()
         self.label_result_container_path.config(text="Path:" + result_path)
         self.label_result_container_cost.config(text="Cost:" + result_cost)
-        self.result_path_map = self.map_widget.set_path(my_path)
+        self.map_widget.set_path(my_path)
         #create path disini
         # self.result_label.config(text=result)
     
-    def polygon_click(polygon):
-        print(f"polygon clicked - text: {polygon.name}")
 
     def choose_file_name(self):
         # initialdir = os.path.abspath(os.path.join(os.getcwd(), "..", "main.go"))
@@ -87,11 +85,11 @@ class Application(Frame):
         # self.my_file_label.config(text=self.selected_file_name)
         # return self.selected_file_name
         self.read_file()
-        connections = {i: [] for i in range(len(self.adjMatrix))}
-        for i in range(len(self.adjMatrix)):
-            for j in range(len(self.adjMatrix)):
-                if self.adjMatrix[i][j] == 1:
-                    connections[i].append(j)
+        # connections = {i: [] for i in range(len(self.adjMatrix))}
+        # for i in range(len(self.adjMatrix)):
+        #     for j in range(len(self.adjMatrix)):
+        #         if self.adjMatrix[i][j] == 1:
+        #             connections[i].append(j)
         #create mark disini
         # print(self.file_data)
         # n = self.file_data[0]
@@ -109,11 +107,23 @@ class Application(Frame):
         #     splitAdjData = adj.strip().split("\t")
         #     adjMatrix.append(splitAdjData)
         self.my_marker_dic = {}
-        # position = []
+        position = []
+        count = 0
         for markerKey in self.my_dic:
             latitude, longitude = self.my_dic[markerKey]
             name = markerKey
             self.my_marker_dic[markerKey] = self.map_widget.set_marker(float(latitude), float(longitude), name)
+        # print(self.adjMatrix)
+        for i in range (len(self.adjMatrix)):
+            for j in range(len(self.adjMatrix[i])):
+                if(self.adjMatrix[i][j] == '1'):
+                        # print(self.nodeIdx[i], "to", self.nodeIdx[j])
+                        position.append([self.my_marker_dic[self.nodeIdx[i]].position, self.my_marker_dic[self.nodeIdx[j]].position])
+        # print(position)
+        for coor in position:
+            # self.map_widget.set_path(coor)
+            self.map_widget.set_polygon(coor, outline_color="red")
+        
         
 
     def read_file(self):
