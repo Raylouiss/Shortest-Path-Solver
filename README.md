@@ -21,10 +21,10 @@ Program ini merupakan program yang menggunakan algoritma A* dan UCS untuk mendap
 │   └─── Tucil3_13521054_13521143.pdf
 ├─── src
 │   ├─── Algorithm
-│   |     ├─── Astar.go
-│   |     ├─── UCS.go
+│   │     ├─── Astar.go
+│   │     ├─── UCS.go
 │   ├─── Class
-│   |     ├─── graph.go
+│   │     ├─── graph.go
 │   ├─── gui.py
 │   └─── main.go
 ├─── go.mod
