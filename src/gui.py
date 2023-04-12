@@ -4,6 +4,7 @@ import socket
 from tkinter import filedialog
 import os
 import subprocess
+import customtkinter
 
 
 class Application(Frame):
@@ -23,6 +24,14 @@ class Application(Frame):
         super().__init__(master)
         self.pack()
         self.create_widgets()
+
+    def change_map(self, new_map: str):
+        if new_map == "OpenStreetMap":
+            self.map_widget.set_tile_server("https://a.tile.openstreetmap.org/{z}/{x}/{y}.png")
+        elif new_map == "Google normal":
+            self.map_widget.set_tile_server("https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga", max_zoom=22)
+        elif new_map == "Google satellite":
+            self.map_widget.set_tile_server("https://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}&s=Ga", max_zoom=22)
 
     def send_input_to_go_algorithm(self):
         input_str = self.selected_file_name + "@" + self.radio_var.get() + "@" + \
@@ -166,6 +175,13 @@ class Application(Frame):
         self.submit_button["command"] = self.send_input_to_go_algorithm
         self.submit_button.pack()
         self.button_container.pack(padx=10, pady=(20, 10))
+
+        # Map label container
+        self.map_label = customtkinter.CTkLabel(self.left_container, text="Tile Server:", anchor="w", font= ("Courier New", 12))
+        self.map_label.pack(side="left", padx=(20, 20), pady=(0, 0))
+        self.map_option_menu = customtkinter.CTkOptionMenu(self.left_container, values=["OpenStreetMap", "Google normal", "Google satellite"],
+                                                                       command=self.change_map)
+        self.map_option_menu.pack(side= "left", padx=(20, 20), pady=(0, 0))
 
         self.left_container.pack(side="left", fill=BOTH)
 
