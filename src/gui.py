@@ -109,6 +109,9 @@ class Application(Frame):
         self.my_marker_dic = {}
         position = []
         count = 0
+        self.map_widget.delete_all_marker()
+        self.map_widget.delete_all_polygon()
+        self.map_widget.delete_all_path()
         for markerKey in self.my_dic:
             latitude, longitude = self.my_dic[markerKey]
             name = markerKey
