@@ -74,7 +74,7 @@ func TurnOffNode(adjMatrix [][]float64, firstNode int, secondNode int) {
 
 func AStar(rangeToGoal map[string]float64, adjMatrix [][]float64, nodeIndex map[string]int, goal string, start string) ([]string, float64) {
 	fmt.Println("You are using A* Algorithm")
-	
+
 	pq := make(PriorityQueue, 1)
 
 	tempAdjMatrix := CopyMatrix(adjMatrix)
@@ -104,6 +104,7 @@ func AStar(rangeToGoal map[string]float64, adjMatrix [][]float64, nodeIndex map[
 		currentIdx := nodeIndex[nodeName]
 		currentPath := currentValue[0].([]string)
 		distanceCost := currentValue[2].(float64)
+		fmt.Println("This is the path now", currentPath)
 		if nodeName == goal {
 			path = currentPath
 			distance = distanceCost

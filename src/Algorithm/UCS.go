@@ -6,7 +6,7 @@ import (
 )
 
 func UCS(adjMatrix [][]float64, nodeIndex map[string]int, goal string, start string) ([]string, float64) {
-    fmt.Println("You are using UCS Algorithm")
+	fmt.Println("You are using UCS Algorithm")
 	pq := make(PriorityQueue, 1)
 
 	tempAdjMatrix := CopyMatrix(adjMatrix)
@@ -38,6 +38,7 @@ func UCS(adjMatrix [][]float64, nodeIndex map[string]int, goal string, start str
 		currentIdx := nodeIndex[nodeName]
 		currentPath := currentValue[0].([]string)
 		distanceCost := currentValue[2].(float64)
+		fmt.Println("This is the path now", currentPath)
 		if nodeName == goal {
 			path = currentPath
 			distance = distanceCost

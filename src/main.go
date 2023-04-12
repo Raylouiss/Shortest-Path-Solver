@@ -158,6 +158,6 @@ func processInput(input string) string {
 	for i := 0; i < len(path); i++ {
 		result = strings.Join(path, " ")
 	}
-	result = result + " " + strconv.FormatFloat(cost, 'f', -1, 64) // This is just a dummy example
+	result = result + " " + strconv.FormatFloat(cost, 'f', -1, 64)
 	return result
 }
