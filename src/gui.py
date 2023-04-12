@@ -44,7 +44,7 @@ class Application(Frame):
         result_cost = result_list[n_result_list-1]
         self.map_widget.delete_all_path()
         self.label_result_container_path.config(text="Path:" + result_path)
-        self.label_result_container_cost.config(text="Cost:" + result_cost)
+        self.label_result_container_cost.config(text="Cost: " + result_cost + " km")
         self.map_widget.set_path(my_path)
 
     def choose_file_name(self):
