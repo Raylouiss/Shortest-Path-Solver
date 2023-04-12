@@ -224,10 +224,10 @@ func read(filepath string, algo string, start string, goal string) ([]string, fl
 	// fmt.Println("Index of node C:", graph.GetIndex("C"))
 
 	// fmt.Println(graph.GetDistance("A", "C"))
-	startIndex, _ := strconv.Atoi(start)
-	goalIndex, _ := strconv.Atoi(goal)
-	startString := graph.Nodes[startIndex].Name
-	goalString := graph.Nodes[goalIndex].Name
+	// startIndex, _ := strconv.Atoi(start)
+	// goalIndex, _ := strconv.Atoi(goal)
+	// startString := graph.Nodes[startIndex].Name
+	// goalString := graph.Nodes[goalIndex].Name
 	// if algo != "option 2" {
 	// 	return Algorithm.UCS(startString, goalString, graph.AdjacencyMatrix, &graph)
 	// } else {
@@ -276,11 +276,11 @@ func read(filepath string, algo string, start string, goal string) ([]string, fl
 	// nodeIdx["E"] = 4
 	// nodeIdx["F"] = 5
 	if algo == "Option 2" {
-		path, distance := Algorithm.UCS(adjMatrix2, nodeIdx, goalString, startString)
+		path, distance := Algorithm.UCS(adjMatrix2, nodeIdx, goal, start)
 		fmt.Println("-----------------")
 		return path, distance
 	} else {
-		path, distance := Algorithm.AStar(rangeToGoal, adjMatrix2, nodeIdx, goalString, startString)
+		path, distance := Algorithm.AStar(rangeToGoal, adjMatrix2, nodeIdx, goal, start)
 		return path, distance
 	}
 }
