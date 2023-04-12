@@ -62,13 +62,22 @@ class Application(Frame):
         result = s.recv(1024).decode()
         result_list = result.split(" ")
         n_result_list= len(result_list)
+        result_list_path = result_list[:n_result_list-1]
+        my_path = []
+        for path in result_list_path:
+            my_path.append(self.my_marker_dic[path].position)
         result_path = ' '.join(result_list[:n_result_list-1])
         result_cost = result_list[n_result_list-1]
+        self.map_widget.delete_all_path()
         self.label_result_container_path.config(text="Path:" + result_path)
         self.label_result_container_cost.config(text="Cost:" + result_cost)
+        self.result_path_map = self.map_widget.set_path(my_path)
         #create path disini
         # self.result_label.config(text=result)
     
+    def polygon_click(polygon):
+        print(f"polygon clicked - text: {polygon.name}")
+
     def choose_file_name(self):
         # initialdir = os.path.abspath(os.path.join(os.getcwd(), "..", "main.go"))
         # self.fileName = filedialog.askopenfilenames(initialdir= initialdir, title = "Select A File", filetypes=(("txt files", "*.txt"),("all files", "*.*")))
@@ -78,6 +87,11 @@ class Application(Frame):
         # self.my_file_label.config(text=self.selected_file_name)
         # return self.selected_file_name
         self.read_file()
+        connections = {i: [] for i in range(len(self.adjMatrix))}
+        for i in range(len(self.adjMatrix)):
+            for j in range(len(self.adjMatrix)):
+                if self.adjMatrix[i][j] == 1:
+                    connections[i].append(j)
         #create mark disini
         # print(self.file_data)
         # n = self.file_data[0]
@@ -94,15 +108,18 @@ class Application(Frame):
         # for adj in self.file_data[n+1 :]:
         #     splitAdjData = adj.strip().split("\t")
         #     adjMatrix.append(splitAdjData)
+        self.my_marker_dic = {}
+        # position = []
         for markerKey in self.my_dic:
             latitude, longitude = self.my_dic[markerKey]
             name = markerKey
-            self.map_widget.set_marker(float(latitude), float(longitude), name)
+            self.my_marker_dic[markerKey] = self.map_widget.set_marker(float(latitude), float(longitude), name)
         
 
     def read_file(self):
         self.my_dic = {}
         self.adjMatrix = []
+        self.nodeIdx = []
         count = 0
         with open(self.selected_file_name, 'r') as file:
             content = file.readlines()
@@ -110,6 +127,7 @@ class Application(Frame):
             for line in content[1:n+1]:
                 parts = line.split()
                 self.my_dic[parts[0]] = (parts[1], parts[2])
+                self.nodeIdx.append(parts[0])
             # Find node with most neighbors and set as center node
             max_neighbors = -1
             for node in self.my_dic:
